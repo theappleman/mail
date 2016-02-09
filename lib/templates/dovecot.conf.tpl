@@ -54,3 +54,11 @@ service auth-worker {
 ssl_cert = <%= "<" %>/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/fullchain
 ssl_key = <%= "<" %>/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/privkey
 ssl = required
+
+plugin {
+  sieve_default = /etc/dovecot/sieve
+}
+
+protocol lmtp {
+  mail_plugins = sieve
+}

@@ -57,11 +57,14 @@ task "dovecot", make {
 	my $mailserver = get(cmdb("mailserver"));
 
 	file "/etc/portage/package.use/net-mail",
-		content => "net-mail/dovecot mysql";
+		content => "net-mail/dovecot mysql sieve";
 
 	pkg "dovecot", ensure => "latest";
 	service "dovecot", ensure => "started";
 
+	file "/etc/dovecot/sieve",
+		source => "files/sieve",
+		on_change => sub { service "dovecot" => "restart" };
 	file "/etc/dovecot/dovecot.conf",
 		content => template("templates/dovecot.conf.tpl",
 			maildir => "mail",

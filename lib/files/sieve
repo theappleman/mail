@@ -1,0 +1,9 @@
+require ["fileinto", "variables", "mailbox"];
+
+if header :matches ["To", "Cc"] "*@*" {
+	fileinto :create "${2}.${1}"; stop;
+}
+
+if header :matches ["To", "Cc"] "*<*@*" {
+	fileinto :create "${3}.${2}"; stop;
+}
