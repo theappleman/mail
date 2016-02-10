@@ -9,7 +9,6 @@ cleanup   unix  n       -       n       -       0       cleanup
 anvil     unix  -       -       n       -       1       anvil
 qmgr      unix  n       -       n       300     1       qmgr
 tlsmgr    unix  -       -       n       1000?   1       tlsmgr
-lmtp      unix  -       -       n       -       -       lmtp
 retry     unix  -       -       n       -       -       error
 pickup    unix  n       -       n       60      1       pickup
 scache    unix  -       -       n       -       1       scache

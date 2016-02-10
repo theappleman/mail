@@ -1,4 +1,4 @@
-protocols = imap lmtp
+protocols = imap
 mail_location = maildir:/<%= $maildir %>/%u
 mail_privileged_group = mail
 first_valid_uid = 0
@@ -26,15 +26,6 @@ service pop3-login {
   }
 }
 
-service lmtp {
-  unix_listener /var/spool/postfix/private/dovecot-lmtp {
-    mode = 0666
-    group = postfix
-    user = postfix
-  }
-  user=mail
-}
-
 service auth {
   unix_listener /var/spool/postfix/private/auth {
     mode = 0666
@@ -57,11 +48,6 @@ ssl = required
 
 plugin {
   sieve_default = /etc/dovecot/sieve
-}
-
-protocol lmtp {
-  postmaster_address = postmaster@%d
-  mail_plugins = sieve
 }
 
 protocol lda {
