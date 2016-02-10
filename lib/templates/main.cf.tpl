@@ -17,7 +17,7 @@ smtpd_recipient_restrictions =
 
 mydestination = localhost
 
-virtual_transport = lmtp:unix:private/dovecot-lmtp
+virtual_transport = dovecot
 virtual_mailbox_domains = mysql:/etc/postfix/mysql-virtual-mailbox-domains.cf
 virtual_mailbox_maps = mysql:/etc/postfix/mysql-virtual-mailbox-maps.cf
 virtual_alias_maps = mysql:/etc/postfix/mysql-virtual-alias-maps.cf

@@ -60,5 +60,11 @@ plugin {
 }
 
 protocol lmtp {
+  postmaster_address = postmaster@%d
+  mail_plugins = sieve
+}
+
+protocol lda {
+  postmaster_address = postmaster@%d
   mail_plugins = sieve
 }

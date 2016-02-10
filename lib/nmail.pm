@@ -64,7 +64,7 @@ task "dovecot", make {
 
 	file "/etc/dovecot/sieve",
 		source => "files/sieve",
-		on_change => sub { service "dovecot" => "restart" };
+		on_change => sub { run "sievec /etc/dovecot/sieve" };
 	file "/etc/dovecot/dovecot.conf",
 		content => template("templates/dovecot.conf.tpl",
 			maildir => "mail",
