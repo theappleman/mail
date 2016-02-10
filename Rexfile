@@ -12,6 +12,7 @@ set -keyauth;
 
 # put your server in this group
 set group => "servers" => "willow.0xdc.host";
+set group => "test" => "mail38.ns38.djdc.host", "mail30.ns30.djdc.host";
 
 task "root", make {
 	my $user = run "whoami";
