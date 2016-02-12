@@ -68,5 +68,6 @@ task "uptime", group => 'servers', sub {
 
 # now load every module via ,,require''
 require Rex::Test;
+require acme;
 require nmail;
 
