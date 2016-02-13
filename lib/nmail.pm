@@ -4,6 +4,8 @@ use Rex -base;
 use Rex::CMDB;
 
 task "postfix", make {
+	needs main "root" || die "Could not gain root privileges";
+
 	my $mailuser = get(cmdb("mailuser"));
 	my $mailuserpass = get(cmdb("mailuserpass"));
 	my $mailserver = get(cmdb("mailserver"));
@@ -52,6 +54,8 @@ task "postfix", make {
 };
 
 task "dovecot", make {
+	needs main "root" || die "Could not gain root privileges";
+
 	my $mailuser = get(cmdb("mailuser"));
 	my $mailuserpass = get(cmdb("mailuserpass"));
 	my $mailserver = get(cmdb("mailserver"));
