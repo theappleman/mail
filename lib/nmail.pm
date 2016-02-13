@@ -83,4 +83,20 @@ task "dovecot", make {
 		on_change => sub { service "dovecot" => "restart" };
 };
 
+task "opendkim", make {
+	needs main "root" || die "Could not gain root privileges";
+
+	file "/etc/portage/package.use/opendkim",
+		content => template('@opendkim.use');
+	pkg "opendkim", ensure => "present";
+};
+
 1;
+
+
+__DATA__
+
+@opendkim.use
+mail-filter/opendkim unbound
+net-dns/unbound -ecdsa
+@end
