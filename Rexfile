@@ -5,7 +5,7 @@ use Rex -feature => '1.0';
 # set your username
 set user => "root";
 
-# set your password
+set parallelism => "max";
 
 # enable password authentication
 set -keyauth;
