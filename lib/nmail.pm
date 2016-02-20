@@ -104,6 +104,6 @@ task "opendkim", make {
 __DATA__
 
 @opendkim.use
-mail-filter/opendkim unbound
+mail-filter/opendkim unbound opendbx
 net-dns/unbound -ecdsa
 @end
