@@ -63,7 +63,7 @@ task "update", make {
 
 desc "Get uptime of server";
 task "uptime", group => 'servers', sub {
-   say run "uptime";
+	say connection->server->hostname . " " . run "uptime";
 };
 
 # now load every module via ,,require''
