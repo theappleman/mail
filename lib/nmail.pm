@@ -17,7 +17,7 @@ task "postfix", make {
 	file "/etc/portage/package.use/mail-mta",
 		on_change => sub { pkg "postfix", ensure => "latest" },
 		content => "mail-mta/postfix mysql dovecot-sasl";
-	pkg "postfix", ensure => "latest";
+	pkg "postfix", ensure => "present";
 	service "postfix", ensure => "started";
 
 	file "/etc/postfix/main.cf",
@@ -67,7 +67,7 @@ task "dovecot", make {
 		on_change => sub { pkg "dovecot", ensure => "latest" },
 		content => "net-mail/dovecot mysql sieve";
 
-	pkg "dovecot", ensure => "latest";
+	pkg "dovecot", ensure => "present";
 	service "dovecot", ensure => "started";
 
 	file "/etc/dovecot/sieve",
