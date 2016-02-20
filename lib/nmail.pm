@@ -15,6 +15,7 @@ task "postfix", make {
 	my $virtual_alias = get(cmdb("virtual_aliases"));
 
 	file "/etc/portage/package.use/mail-mta",
+		on_change => sub { pkg "postfix", ensure => "latest" },
 		content => "mail-mta/postfix mysql dovecot-sasl";
 	pkg "postfix", ensure => "latest";
 	service "postfix", ensure => "started";
@@ -63,6 +64,7 @@ task "dovecot", make {
 	my $mailserver = get(cmdb("mailserver"));
 
 	file "/etc/portage/package.use/net-mail",
+		on_change => sub { pkg "dovecot", ensure => "latest" },
 		content => "net-mail/dovecot mysql sieve";
 
 	pkg "dovecot", ensure => "latest";
@@ -90,6 +92,7 @@ task "opendkim", make {
 	needs main "root" || die "Could not gain root privileges";
 
 	file "/etc/portage/package.use/opendkim",
+		on_change => sub { pkg "opendkim", ensure => "latest" },
 		content => template('@opendkim.use');
 	pkg "opendkim", ensure => "present";
 };
