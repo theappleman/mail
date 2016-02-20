@@ -3,6 +3,7 @@ package nmail;
 use Rex -base;
 use Rex::CMDB;
 
+desc "SMTP server";
 task "postfix", make {
 	needs main "root" || die "Could not gain root privileges";
 
@@ -53,6 +54,7 @@ task "postfix", make {
 		on_change => sub { service "postfix" => "restart" };
 };
 
+desc "IMAP server";
 task "dovecot", make {
 	needs main "root" || die "Could not gain root privileges";
 
@@ -83,6 +85,7 @@ task "dovecot", make {
 		on_change => sub { service "dovecot" => "restart" };
 };
 
+desc "DKIM filter";
 task "opendkim", make {
 	needs main "root" || die "Could not gain root privileges";
 
