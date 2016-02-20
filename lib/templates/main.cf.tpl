@@ -10,6 +10,12 @@ smtpd_tls_received_header = yes
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
 smtpd_sasl_auth_enable = yes
+
+smtpd_client_restrictions =
+	permit_sasl_authenticated,
+	defer_if_reject reject_rbl_client b.barracudacentral.org,
+	defer_if_reject reject_unknown_reverse_client_hostname,
+	reject_unauth_destination
 smtpd_recipient_restrictions =
 	permit_sasl_authenticated,
 	permit_mynetworks,
