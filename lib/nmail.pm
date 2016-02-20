@@ -95,6 +95,7 @@ task "opendkim", make {
 		on_change => sub { pkg "opendkim", ensure => "latest" },
 		content => template('@opendkim.use');
 	pkg "opendkim", ensure => "present";
+	service "opendkim", ensure => "started";
 };
 
 1;
