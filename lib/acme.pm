@@ -6,6 +6,9 @@ desc "Install acmetool";
 task "install", make {
 	needs main "root" || die "Cannot gain root access";
 
+	file "/etc/systemd/system/acmetool.service",
+		content => template('@acmetool.service'),
+		on_change => sub { run "systemctl daemon-reload" };
 	pkg "dev-lang/go", ensure => "present";
 	pkg "dev-vcs/git", ensure => "present";
 	if (not get_uid "acme") {
@@ -23,3 +26,17 @@ task "install", make {
 };
 
 1;
+
+__DATA__
+
+@acmetool.service
+[Unit]
+Description=Run acmetool to renew certificates
+
+[Service]
+Type=oneshot
+User=acme
+Group=acme
+WorkingDirectory=/home/acme
+ExecStart=/home/acme/.local/go/bin/acmetool
+@end
