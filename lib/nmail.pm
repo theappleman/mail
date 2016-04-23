@@ -91,11 +91,26 @@ desc "DKIM filter";
 task "opendkim", make {
 	needs main "root" || die "Could not gain root privileges";
 
+	my $mailuser = get(cmdb("mailuser"));
+	my $mailuserpass = get(cmdb("mailuserpass"));
+	my $mailserver = get(cmdb("mailserver"));
+
 	file "/etc/portage/package.use/opendkim",
 		on_change => sub { pkg "opendkim", ensure => "latest" },
 		content => template('@opendkim.use');
 	pkg "opendkim", ensure => "present";
 	service "opendkim", ensure => "started";
+
+	file "/etc/opendkim/TrustedHosts",
+		content => "127.0.0.1",
+		on_change => sub { service "opendkim" => "restart" };
+	file "/etc/opendkim/opendkim.conf",
+		content => template("templates/opendkim.conf.tpl",
+			mailuser => $mailuser,
+			mailuserpass => $mailuserpass,
+			mailserver => $mailserver,
+			),
+			on_change => sub { service "opendkim" => "restart" };
 };
 
 1;
