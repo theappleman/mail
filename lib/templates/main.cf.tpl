@@ -32,3 +32,8 @@ local_recipient_maps = $virtual_mailbox_maps
 
 append_dot_mydomain=no
 compatibility_level=2
+
+
+smtpd_milters           = inet:127.0.0.1:8891
+non_smtpd_milters       = $smtpd_milters
+milter_default_action   = accept
