@@ -4,6 +4,7 @@ submission inet n       -       n       -       -       smtpd
 smtps     inet  n       -       n       -       -       smtpd
   -o smtpd_tls_wrappermode=yes
 
+smtp      unix  -       -       n       -       -       smtp
 rewrite   unix  -       -       n       -       -       trivial-rewrite
 cleanup   unix  n       -       n       -       0       cleanup
 anvil     unix  -       -       n       -       1       anvil
