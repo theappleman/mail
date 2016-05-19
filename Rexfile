@@ -70,6 +70,7 @@ task "uptime", group => 'servers', sub {
 require Rex::Test;
 require acme;
 require nmail;
+require mysql;
 require nginx;
 
 batch "mail", "acme:install", "nmail:postfix", "nmail:dovecot", "nmail:opendkim";
