@@ -71,4 +71,4 @@ require Rex::Test;
 require acme;
 require nmail;
 
-batch "mail", "acme:install", "nmail:postfix", "nmail:dovecot";
+batch "mail", "acme:install", "nmail:postfix", "nmail:dovecot", "nmail:opendkim";
