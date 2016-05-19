@@ -71,6 +71,7 @@ require Rex::Test;
 require acme;
 require nmail;
 require mysql;
+require Oxdc;
 require nginx;
 
 batch "mail", "acme:install", "nmail:postfix", "nmail:dovecot", "nmail:opendkim";
