@@ -7,7 +7,7 @@ InternalHosts           refile:/etc/opendkim/TrustedHosts
 LogWhy                  Yes
 MinimumKeyBits          1024
 Mode                    sv
-PidFile                 /var/run/opendkim/opendkim.pid
+PidFile                 /run/opendkim/opendkim.pid
 Socket                  inet:8891@localhost
 Syslog                  Yes
 SyslogSuccess           Yes

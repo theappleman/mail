@@ -95,11 +95,18 @@ task "opendkim", make {
 	my $mailuserpass = get(cmdb("mailuserpass"));
 	my $mailserver = get(cmdb("mailserver"));
 
+	file "/etc/tmpfiles.d/opendkim.conf",
+		content => "D /run/opendkim 0750 milter postfix";
 	file "/etc/portage/package.use/opendkim",
 		on_change => sub { pkg "opendkim", ensure => "latest" },
 		content => template('@opendkim.use');
 	pkg "opendkim", ensure => "present";
 	service "opendkim", ensure => "started";
+
+	file "/run/opendkim",
+		ensure => "directory",
+		owner => "milter",
+		group => "postfix";
 
 	file "/etc/opendkim/TrustedHosts",
 		content => "127.0.0.1",
