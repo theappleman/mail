@@ -13,6 +13,7 @@ set -keyauth;
 # put your server in this group
 set group => "servers" => "willow.0xdc.host";
 set group => "test" => "mail38.ns38.djdc.host", "mail30.ns30.djdc.host";
+set group => "btrfs" => "ovh38", "ovh30", "home";
 
 task "root", make {
 	my $user = run "whoami";
@@ -73,5 +74,6 @@ require nmail;
 require mysql;
 require Oxdc;
 require nginx;
+require btrfs;
 
 batch "mail", "acme:install", "nmail:postfix", "nmail:dovecot", "nmail:opendkim";
