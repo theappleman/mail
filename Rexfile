@@ -56,6 +56,12 @@ task "install", make {
 	pkg $pkg, ensure => "latest";
 };
 
+desc "Sync package database";
+task "sync", make {
+	needs main "root" || die "Could not gain root privileges";
+	update_package_db;
+};
+
 desc "Update system packages";
 task "update", make {
 	needs main "root" || die "Could not gain root privileges";
