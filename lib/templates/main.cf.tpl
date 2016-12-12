@@ -7,6 +7,11 @@ smtp_tls_security_level = may
 smtp_tls_loglevel = 2
 smtpd_tls_received_header = yes
 
+smtpd_tls_mandatory_protocols = !SSLv2,!SSLv3,!TLSv1,!TLSv1.1
+smtpd_tls_protocols=!SSLv2,!SSLv3,!TLSv1,!TLSv1.1
+smtpd_tls_mandatory_ciphers = medium
+tls_medium_cipherlist = AES128+EECDH:AES128+EDH
+
 smtpd_sasl_type = dovecot
 smtpd_sasl_path = private/auth
 smtpd_sasl_auth_enable = yes
