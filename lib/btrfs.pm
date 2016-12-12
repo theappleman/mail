@@ -25,6 +25,23 @@ task "scrub", make {
 	service "btrfs-scrub.timer", ensure => "started";
 };
 
+desc "Take btrfs snapshots regularly";
+task "snapshot", group => "servers", make {
+	needs main "root" || die "Cannot gain root access";
+
+	file "/usr/local/sbin/btrfs-snap",
+		content => template('@snap'),
+		mode => "0700";
+	file "/etc/systemd/system/btrfs-snap.service",
+		content => template('@snap.service'),
+		on_change => sub { run "systemctl daemon-reload" };
+	file "/etc/systemd/system/btrfs-snap.timer",
+		content => template('@snap.timer'),
+		on_change => sub { run "systemctl daemon-reload" };
+
+	service "btrfs-snap.timer", ensure => "started";
+};
+
 1;
 
 __DATA__
@@ -49,6 +66,36 @@ Description=Periodically run btrfs scrub
 [Timer]
 OnBootSec=30min
 OnUnitActiveSec=1w
+
+[Install]
+WantedBy=timers.target
+@end
+
+@snap
+#!/bin/bash
+
+date=$(date +%Y-%m-%d)
+
+mount -t btrfs | awk '{if(dev[$1] == ""){dev[$1]=$3; print$3}}' | while read devpath; do
+	test -d $devpath/.btrfs/snapshots/ || mkdir -p $devpath/.btrfs/snapshots/
+	btrfs subv snap $devpath $devpath/.btrfs/snapshots/$date
+done
+@end
+
+@snap.service
+[Unit]
+Description=btrfs filesystem snapshot
+
+[Service]
+ExecStart=/usr/local/sbin/btrfs-snap
+@end
+
+@snap.timer
+[Unit]
+Description=Periodically snapshot btrfs filesystems
+
+[Timer]
+OnCalendar=05:00:00
 
 [Install]
 WantedBy=timers.target
