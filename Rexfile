@@ -66,9 +66,9 @@ task "update", make {
 	update_system;
 };
 
-desc "Get uptime of server";
+desc "Get uptime of servers";
 task "uptime", group => 'servers', sub {
-	say connection->server->hostname . " " . run "uptime";
+	say "[" . connection->server->hostname . "] " . run "uptime";
 };
 
 # now load every module via ,,require''
