@@ -46,6 +46,12 @@ ssl_cert = <%= "<" %>/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/fullchai
 ssl_key = <%= "<" %>/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/privkey
 ssl = required
 
+ssl_protocols = !SSLv2 !SSLv3
+ssl_cipher_list = AES128+EECDH:AES128+EDH
+ssl_prefer_server_ciphers = yes
+ssl_dh_parameters_length = 4096
+
+
 plugin {
   sieve_default = /etc/dovecot/sieve
 }
