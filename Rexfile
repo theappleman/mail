@@ -80,6 +80,7 @@ require Oxdc;
 require nginx;
 require btrfs;
 require recap;
+require sysstat;
 require portage;
 
 batch "mail", "acme:install", "nmail:postfix", "nmail:dovecot", "nmail:opendkim", "nginx:install", "Oxdc:install";
