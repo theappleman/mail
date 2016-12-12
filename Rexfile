@@ -79,6 +79,7 @@ require mysql;
 require Oxdc;
 require nginx;
 require btrfs;
+require recap;
 require portage;
 
 batch "mail", "acme:install", "nmail:postfix", "nmail:dovecot", "nmail:opendkim", "nginx:install", "Oxdc:install";
