@@ -21,6 +21,9 @@ task "install", make {
 		source => "lib/files/nginx.conf",
 		on_change => sub { service "nginx" => "reload" };
 
+	file "/etc/nginx/conf.d",
+		ensure => "directory";
+
 	file "/etc/nginx/acme-challenge.conf",
 		source => "lib/files/nginx/acme-challenge.conf",
 		on_change => sub { service "nginx" => "reload" };
