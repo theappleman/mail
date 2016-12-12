@@ -31,7 +31,7 @@ __DATA__
 @scrub
 #!/bin/bash
 
-mount -t btrfs | awk '{print$1}' | uniq | xargs --no-run-if-empty -n1 btrfs scrub start -Bd
+mount -t btrfs | awk '{print$3}' | xargs --no-run-if-empty -n1 btrfs fi show | awk '/devid/{print$NF}' | uniq | xargs --no-run-if-empty -n1 btrfs scrub start -Bd
 @end
 
 @scrub.service
