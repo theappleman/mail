@@ -7,7 +7,7 @@ set user => "root";
 
 set parallelism => "max";
 
-# enable password authentication
+# enable key authentication
 set -keyauth;
 
 # put your server in this group
