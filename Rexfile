@@ -80,4 +80,4 @@ require Oxdc;
 require nginx;
 require btrfs;
 
-batch "mail", "acme:install", "nmail:postfix", "nmail:dovecot", "nmail:opendkim";
+batch "mail", "acme:install", "nmail:postfix", "nmail:dovecot", "nmail:opendkim", "nginx:install", "Oxdc:install";
