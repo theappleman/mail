@@ -11,7 +11,7 @@ set parallelism => "max";
 set -keyauth;
 
 # put your server in this group
-set group => "servers" => "maple", "willow", "azolla" => { "user" => "apple" };
+set group => "servers" => "maple.condi.me", "azolla.0xdc.host" => { "user" => "apple" };
 
 task "root", make {
 	my $user = run "whoami";
