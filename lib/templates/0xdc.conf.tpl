@@ -32,6 +32,6 @@ server {
 	location @backend {
 		proxy_pass http://127.0.0.1:8000;
 		proxy_set_header Host $host;
-		access_log /var/log/nginx/0xdc_log main;
+		access_log /var/log/nginx/0xdc_log combined;
 	}
 }
