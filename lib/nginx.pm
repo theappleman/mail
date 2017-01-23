@@ -6,6 +6,10 @@ desc "Install nginx";
 task "install", make {
 	needs main "root" || die "Cannot gain root access";
 
+	file "/etc/portage/profile",
+		ensure => "directory";
+	append_if_no_such_line "/etc/portage/profile/package.use.mask",
+		"www-servers/nginx -rtmp";
 	append_if_no_such_line "/etc/portage/package.accept_keywords",
 		"www-servers/nginx:0 ~arm";
 	file "/etc/portage/package.use/www-servers",
