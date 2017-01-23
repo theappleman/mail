@@ -40,6 +40,8 @@ task "install", make {
 			),
 		on_change => sub { service "nginx" => "reload" };
 
+	file "/etc/systemd/user/0xdc.service",
+		content => template('@service');
 	#use Data::Dumper; say Dumper $Oxdc;
 
 	sudo { user => "www0xdc", command => sub {
@@ -58,6 +60,7 @@ task "install", make {
 			creates => "/home/www0xdc/0xdc-cfg/env/bin/activate";
 		run ". env/bin/activate && pip install -r requirements.txt",
 			cwd => "/home/www0xdc/0xdc-cfg";
+		run "systemctl --user restart 0xdc";
 	  }
 	};
 };
