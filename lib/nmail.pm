@@ -62,6 +62,7 @@ task "dovecot", make {
 	my $mailuser = get(cmdb("mailuser"));
 	my $mailuserpass = get(cmdb("mailuserpass"));
 	my $mailserver = get(cmdb("mailserver"));
+	my %sysinf = get_system_information;
 
 	file "/etc/portage/package.use/net-mail",
 		on_change => sub { pkg "dovecot", ensure => "latest" },
@@ -83,6 +84,7 @@ task "dovecot", make {
 			mailuser => $mailuser,
 			mailuserpass => $mailuserpass,
 			mailserver => $mailserver,
+			ssl => is_file("/var/lib/acme/live".$sysinf{"hostname"}."/privkey"),
 		),
 		on_change => sub { service "dovecot" => "restart" };
 };
