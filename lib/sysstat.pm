@@ -9,6 +9,9 @@ task "install", group => "hosts", make {
 
 	needs main "root" || die "Cannot gain root access";
 
+	append_if_no_such_line "/etc/portage/package.accept_keywords",
+		"app-admin/sysstat ~arm";
+
 	pkg "sysstat", ensure => "present";
 
 	if ($params->{timers}) {
