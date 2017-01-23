@@ -17,7 +17,7 @@ server {
 			sub_filter '<hostname>' 'coreos$remote_port';
 			sub_filter_once off;
 			sub_filter_types '*';
-			try_files @backend;
+			try_files $uri $uri/ @backend;
 			access_log off;
 	 }
 
