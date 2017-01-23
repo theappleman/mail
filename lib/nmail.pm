@@ -101,6 +101,16 @@ task "opendkim", make {
 		ensure => "directory";
 	file "/etc/tmpfiles.d/opendkim.conf",
 		content => "D /run/opendkim 0750 milter postfix";
+	file "/etc/portage/profile",
+		ensure => "directory";
+	append_if_no_such_line "/etc/portage/profile/package.use.mask",
+		"mail-filter/opendkim -opendbx";
+	append_if_no_such_line "/etc/portage/package.accept_keywords",
+		"dev-db/opendbx **";
+	append_if_no_such_line "/etc/portage/package.accept_keywords",
+		"mail-filter/opendkim ~arm";
+	append_if_no_such_line "/etc/portage/package.accept_keywords",
+		"mail-filter/libmilter ~arm";
 	file "/etc/portage/package.use/opendkim",
 		on_change => sub { pkg "opendkim", ensure => "latest" },
 		content => template('@opendkim.use');
