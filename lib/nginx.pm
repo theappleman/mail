@@ -7,9 +7,7 @@ task "install", make {
 	needs main "root" || die "Cannot gain root access";
 
 	append_if_no_such_line "/etc/portage/package.accept_keywords",
-		"=www-servers/nginx-1.9*",
-		on_change => sub { pkg "nginx", ensure => "latest" };
-
+		"www-servers/nginx:0 ~arm";
 	file "/etc/portage/package.use/www-servers",
 		content => "www-servers/nginx rtmp nginx_modules_http_sub",
 		on_change => sub { pkg "nginx", ensure => "latest" };
