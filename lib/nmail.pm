@@ -97,6 +97,8 @@ task "opendkim", make {
 	my $mailuserpass = get(cmdb("mailuserpass"));
 	my $mailserver = get(cmdb("mailserver"));
 
+	file "/etc/tmpfiles.d",
+		ensure => "directory";
 	file "/etc/tmpfiles.d/opendkim.conf",
 		content => "D /run/opendkim 0750 milter postfix";
 	file "/etc/portage/package.use/opendkim",
