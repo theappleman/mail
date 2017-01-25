@@ -25,6 +25,8 @@ task "install", make {
 
 	file "/etc/nginx/conf.d",
 		ensure => "directory";
+	file "/etc/nginx/vhosts.d",
+		ensure => "directory";
 
 	file "/etc/nginx/acme-challenge.conf",
 		source => "lib/files/nginx/acme-challenge.conf",

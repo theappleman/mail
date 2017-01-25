@@ -34,7 +34,7 @@ task "install", make {
 	run "mysql -e 'grant all on $Oxdc->{database}.* to \"$Oxdc->{username}\"@\"$Oxdc->{hostname}\" identified by \"$Oxdc->{password}\"'",
 		unless => "mysql -e 'select user,host from mysql.user' | grep -q $Oxdc->{username}";
 
-	file "/etc/nginx/conf.d/0xdc.conf",
+	file "/etc/nginx/vhosts.d/0xdc.conf",
 		content => template("lib/templates/0xdc.conf.tpl",
 			ssl => is_file("/var/lib/acme/live/0xdc.io/privkey")
 			),
