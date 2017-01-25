@@ -27,6 +27,10 @@ task "files", make {
 		ensure => "present";
 	file "/etc/portage/package.use",
 		ensure => "directory";
+	file "/etc/portage/profile",
+		ensure => "directory";
+	file "/etc/portage/profile/package.use.mask",
+		ensure => "present";
 }, { dont_register => TRUE };
 
 1;
