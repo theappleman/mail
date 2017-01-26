@@ -82,6 +82,7 @@ require btrfs;
 require recap;
 require sysstat;
 require portage;
+require mysql;
 
-batch "mail", "acme:install", "portage:files", "nmail:postfix", "nmail:dovecot", "nmail:opendkim", "nginx:install", "Oxdc:install";
+batch "mail", "acme:install", "portage:files", "mysql:install", "nmail:postfix", "nmail:dovecot", "nmail:opendkim", "nginx:install", "Oxdc:install";
 batch "monitor", "recap:install", "sysstat:install";

@@ -5,12 +5,47 @@ use Rex -base;
 desc "Install MySQL";
 task "install", make {
 	needs main "root" || die "Cannot gain root access";
-	pkg "mysql", ensure => "present";
+	pkg "virtual/mysql", ensure => "present";
+
+	run "/usr/share/mysql/scripts/mysql_install_db",
+		cwd => "/usr",
+		creates => "/var/lib/mysql/ibdata1";
+
+	file "/etc/mysql/zz-mybind.cnf",
+		"ensure" => "absent";
+	file "/etc/mysql/mybind.cnf",
+		content => template('@mybind.cnf'),
+		on_change => sub { service "mysqld" => "restart" };
+	delete_lines_according_to qr{^bind-address}, "/etc/mysql/my.cnf",
+		on_change => sub { service "mysqld" => "restart" };
 	service "mysqld", ensure => "started";
 
-	# check root user exists
-	run "mysql -e 'select user,host from mysql.user where user = \"root\";' | grep -q root";
-	say "mysql rc: $?";
+	my $pwgen;
+	LOCAL {
+		$pwgen = run "pwgen -s";
+	};
+
+	run "mysqladmin password $pwgen";
+	file "/root/.my.cnf",
+		content => template('@my.cnf', password => $pwgen);
+
+	run q|mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"|;
+	run q|mysql -e "DELETE FROM mysql.user WHERE User=''"|;
+	run q|mysql -e "DROP DATABASE IF EXISTS test"|;
+	run q|mysql -e "DELETE FROM mysql.db WHERE Db='test' OR Db='test\_%'"|;
+	run q|mysql -e "FLUSH PRIVILEGES"|;
 };
 
 1;
+
+__DATA__
+@mybind.cnf
+[mysqld]
+bind-address = ::
+@end
+
+@my.cnf
+[client]
+user=root
+password=<%= $password %>
+@end
