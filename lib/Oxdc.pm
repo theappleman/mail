@@ -21,12 +21,12 @@ task "install", make {
 		$accpw = run "pwgen -s 97 1";
 	};
 
-	account "www0xdc",
+	account "_0xdc",
 		password => $accpw;
-	file "/home/www0xdc",
+	file "/home/_0xdc",
 		ensure => "directory",
-		owner => "www0xdc",
-		group => "www0xdc";
+		owner => "_0xdc",
+		group => "_0xdc";
 
 	run "mysql -e 'create database $Oxdc->{database}'",
 		unless => "mysql -e 'show databases' | grep -q $Oxdc->{database}";
@@ -44,22 +44,22 @@ task "install", make {
 		content => template('@service');
 	#use Data::Dumper; say Dumper $Oxdc;
 
-	sudo { user => "www0xdc", command => sub {
+	sudo { user => "_0xdc", command => sub {
 		checkout "0xdc",
-			path => "/home/www0xdc/0xdc-cfg";
-		file "/home/www0xdc/.0xdc.cfg",
+			path => "/home/_0xdc/0xdc-cfg";
+		file "/home/_0xdc/.0xdc.cfg",
 			content => template('@0xdc.cfg',
 				Oxdc => $Oxdc,
 			),
-			owner => "www0xdc",
-			group => "www0xdc",
+			owner => "_0xdc",
+			group => "_0xdc",
 			mode => "0600";
 
 		run "pyvenv-3.4 env",
-			cwd => "/home/www0xdc/0xdc-cfg",
-			creates => "/home/www0xdc/0xdc-cfg/env/bin/activate";
+			cwd => "/home/_0xdc/0xdc-cfg",
+			creates => "/home/_0xdc/0xdc-cfg/env/bin/activate";
 		run ". env/bin/activate && pip install -r requirements.txt",
-			cwd => "/home/www0xdc/0xdc-cfg";
+			cwd => "/home/_0xdc/0xdc-cfg";
 		run "systemctl --user restart 0xdc";
 	  }
 	};
@@ -85,9 +85,9 @@ Description=Django syscfg
 
 [Service]
 Type=simple
-EnvironmentFile=/home/www0xdc/.0xdc.cfg
-ExecStartPre=/home/www0xdc/0xdc-cfg/env/bin/python /home/www0xdc/0xdc-cfg/manage.py collectstatic --no-input
-ExecStartPre=/home/www0xdc/0xdc-cfg/env/bin/python /home/www0xdc/0xdc-cfg/manage.py migrate
-ExecStart=/home/www0xdc/0xdc-cfg/env/bin/gunicorn syscfg.wsgi:application
-WorkingDirectory=/home/www0xdc/0xdc-cfg
+EnvironmentFile=/home/_0xdc/.0xdc.cfg
+ExecStartPre=/home/_0xdc/0xdc-cfg/env/bin/python /home/_0xdc/0xdc-cfg/manage.py collectstatic --no-input
+ExecStartPre=/home/_0xdc/0xdc-cfg/env/bin/python /home/_0xdc/0xdc-cfg/manage.py migrate
+ExecStart=/home/_0xdc/0xdc-cfg/env/bin/gunicorn syscfg.wsgi:application
+WorkingDirectory=/home/_0xdc/0xdc-cfg
 @end
