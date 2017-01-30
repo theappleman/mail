@@ -36,6 +36,22 @@ task "install", make {
 	run q|mysql -e "FLUSH PRIVILEGES"|;
 };
 
+desc "Ensure mysql user exists";
+task "mkuser", make {
+	needs main "root" || die "Cannot gain root access";
+	my $params = shift;
+
+	my $db = $params->{database} || die "No database given";
+	my $user = $params->{username} || die "No username given";
+	my $host = $params->{hostname} || die "No hostname given";
+	my $pass = $params->{password} || die "No password given";
+	my $glvl = $params->{grantlvl} || "ALL";
+
+	run qq|mysql -e "CREATE DATABASE IF NOT EXISTS $db"|;
+	run qq|mysql -e "grant $glvl on $db.* to '$user'\@'$host' identified by '$pass'"|,
+		unless => qq/mysql -e "select user from mysql.user" | grep -q $user/;
+};
+
 1;
 
 __DATA__
