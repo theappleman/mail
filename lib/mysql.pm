@@ -47,6 +47,10 @@ task "mkuser", make {
 	my $pass = $params->{password} || die "No password given";
 	my $glvl = $params->{grantlvl} || "ALL";
 
+	if (length($user) gt 15) {
+		Rex::Logger::info("Username is (potentially) too long for MySQL, continuing...","warn");
+	}
+
 	run qq|mysql -e "CREATE DATABASE IF NOT EXISTS $db"|;
 	run qq|mysql -e "grant $glvl on $db.* to '$user'\@'$host' identified by '$pass'"|,
 		unless => qq/mysql -e "select user from mysql.user" | grep -q $user/;

@@ -141,10 +141,6 @@ task "user", make {
 	my $mailserver = get(cmdb("mailserver"));
 	my $mailhost = get(cmdb("mailhost"));
 
-	if (length($mailuser) gt 15) {
-		Rex::Logger::info("Username is (potentially) too long for MySQL, continuing...","warn");
-	}
-
 	run_task "mysql:mkuser", on => connection->server, params => {
 		database => $mailserver,
 		hostname => $mailhost,
