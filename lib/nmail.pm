@@ -134,6 +134,25 @@ task "opendkim", make {
 			on_change => sub { service "opendkim" => "restart" };
 };
 
+desc "Make the mail user";
+task "user", make {
+	my $mailuser = get(cmdb("mailuser"));
+	my $mailuserpass = get(cmdb("mailuserpass"));
+	my $mailserver = get(cmdb("mailserver"));
+	my $mailhost = get(cmdb("mailhost"));
+
+	if (length($mailuser) gt 15) {
+		Rex::Logger::info("Username is (potentially) too long for MySQL, continuing...","warn");
+	}
+
+	run_task "mysql:mkuser", on => connection->server, params => {
+		database => $mailserver,
+		hostname => $mailhost,
+		username => $mailuser,
+		password => $mailuserpass,
+	};
+};
+
 1;
 
 

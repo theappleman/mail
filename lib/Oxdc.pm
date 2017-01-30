@@ -28,11 +28,7 @@ task "install", make {
 		owner => "_0xdc",
 		group => "_0xdc";
 
-	run "mysql -e 'create database $Oxdc->{database}'",
-		unless => "mysql -e 'show databases' | grep -q $Oxdc->{database}";
-
-	run "mysql -e 'grant all on $Oxdc->{database}.* to \"$Oxdc->{username}\"@\"$Oxdc->{hostname}\" identified by \"$Oxdc->{password}\"'",
-		unless => "mysql -e 'select user,host from mysql.user' | grep -q $Oxdc->{username}";
+	run_task "mysql:mkuser", on => connection->server, params => $Oxdc;
 
 	file "/etc/nginx/vhosts.d/0xdc.conf",
 		content => template("lib/templates/0xdc.conf.tpl",
