@@ -55,6 +55,8 @@ task "install", make {
 			GOPATH => "/home/acme/.local/go",
 		},
 		user => "acme";
+
+	service "acmetool.service", ensure => "started";
 };
 
 1;
@@ -71,6 +73,9 @@ User=acme
 Group=acme
 WorkingDirectory=/home/acme
 ExecStart=/home/acme/.local/go/bin/acmetool
+
+[Install]
+WantedBy=multi-user.target
 @end
 
 @response
