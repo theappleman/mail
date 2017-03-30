@@ -41,6 +41,8 @@ task "install", make {
 	#use Data::Dumper; say Dumper $Oxdc;
 
 	# Enable linger
+	file "/var/lib/systemd/linger",
+		state => "directory";
 	file "/var/lib/systemd/linger/_0xdc",
 		state => "present";
 
