@@ -2,6 +2,10 @@ package dotd;
 
 use Rex -base;
 
+require Exporter;
+
+our @EXPORT = qw|dotd|;
+
 task "dotd", make {
 	my $params = shift;
 	my $root = $params->{root} || 0;
