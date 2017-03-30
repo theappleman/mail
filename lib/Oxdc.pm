@@ -66,13 +66,13 @@ task "install", make {
 __DATA__
 
 @0xdc.cfg
-SECRET_KEY=<%= $Oxdc->{secret_key} %>
-DB_DEFAULT_HOST=<%= $Oxdc->{hostname} %>
-DB_DEFAULT_NAME=<%= $Oxdc->{database} %>
-DB_DEFAULT_USER=<%= $Oxdc->{username} %>
-DB_DEFAULT_PASSWORD=<%= $Oxdc->{password} %>
-DEBUG=<%= $Oxdc->{debug} %>
-ALLOWED_HOST=<%= $hostname %>
+SECRET_KEY="<%= $Oxdc->{secret_key} %>"
+DB_DEFAULT_HOST="<%= $Oxdc->{hostname} %>"
+DB_DEFAULT_NAME="<%= $Oxdc->{database} %>"
+DB_DEFAULT_USER="<%= $Oxdc->{username} %>"
+DB_DEFAULT_PASSWORD="<%= $Oxdc->{password} %>"
+DEBUG="<%= $Oxdc->{debug} %>"
+ALLOWED_HOST="<%= $hostname %>"
 @end
 
 @service
