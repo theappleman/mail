@@ -42,14 +42,14 @@ task "install", make {
 
 	# Enable linger
 	file "/var/lib/systemd/linger",
-		state => "directory";
+		ensure => "directory";
 	file "/var/lib/systemd/linger/_0xdc",
-		state => "present";
+		ensure => "present";
 
 	sudo { user => "_0xdc", command => sub {
 		foreach my $csdir (@{[".config",".config/systemd",".config/systemd/user"]}) {
 			file "/home/_0xdc/$csdir",
-				state => "directory";
+				ensure => "directory";
 		}
 
 		checkout "0xdc",
