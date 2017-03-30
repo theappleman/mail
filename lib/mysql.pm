@@ -11,6 +11,9 @@ task "install", make {
 		cwd => "/usr",
 		creates => "/var/lib/mysql/ibdata1";
 
+	run "systemd-tmpfiles --create",
+		creates => "/var/run/mysqld";
+
 	file "/etc/mysql/zz-mybind.cnf",
 		"ensure" => "absent";
 	file "/etc/mysql/mybind.cnf",
