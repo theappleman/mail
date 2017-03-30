@@ -60,6 +60,29 @@ task "install", make {
 	service "acmetool.service", ensure => "started";
 };
 
+desc "Want some hostnames (--hosts=)";
+task "want", make {
+	needs main 'root' || die "Cannot gain root access";
+	pkg "sudo", ensure => "present";
+
+	my $params = shift;
+	my $sysinf = get_system_information;
+
+	my $hosts = $params->{hosts} || $sysinf->{hostname};
+
+	sudo sub {
+		run "/home/acme/.local/go/bin/acmetool want $hosts", sub {
+			my ($stdout, $stderr) = @_;
+			my $server = Rex::get_current_connection()->{server};
+			Rex::Logger::info("[$server] $stdout", "warn");
+			Rex::Logger::info("[$server] $stderr", "error");
+		},
+		env => {
+			GOPATH => "/home/acme/.local/go",
+		};
+	}, user => "acme";
+};
+
 1;
 
 __DATA__
