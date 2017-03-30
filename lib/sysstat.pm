@@ -2,6 +2,7 @@ package sysstat;
 
 use Rex -base;
 use Rex::Commands::SCM;
+use dotd;
 
 desc "Install sysstat";
 task "install", group => "hosts", make {
@@ -9,8 +10,8 @@ task "install", group => "hosts", make {
 
 	needs main "root" || die "Cannot gain root access";
 
-	append_if_no_such_line "/etc/portage/package.accept_keywords",
-		"app-admin/sysstat ~arm";
+	dotd::dotd { conf => "/etc/portage/package.accept_keywords",
+		line => "app-admin/sysstat ~arm" };
 
 	pkg "sysstat", ensure => "present";
 
