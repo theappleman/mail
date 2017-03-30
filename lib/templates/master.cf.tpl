@@ -14,6 +14,8 @@ retry     unix  -       -       n       -       -       error
 pickup    unix  n       -       n       60      1       pickup
 scache    unix  -       -       n       -       1       scache
 virtual   unix  -       n       n       -       -       virtual
+bounce    unix  -       -       n       -       0       bounce
+defer     unix  -       -       n       -       0       bounce
 
 dovecot   unix  -       n       n       -       -       pipe
   flags=ODRhu user=mail:mail argv=/usr/libexec/dovecot/dovecot-lda -f ${sender} -a ${original_recipient} -d ${user}@${nexthop}
