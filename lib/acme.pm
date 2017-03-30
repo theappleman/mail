@@ -11,6 +11,8 @@ task "install", make {
 		on_change => sub { run "systemctl daemon-reload" };
 	pkg "dev-lang/go", ensure => "present";
 	pkg "dev-vcs/git", ensure => "present";
+	pkg "sudo", ensure => "present";
+
 	if (not get_uid "acme") {
 		create_user "acme",
 			create_home => TRUE,
@@ -34,27 +36,26 @@ task "install", make {
 		ensure => "directory",
 		owner => "acme",
 		group => "acme";
-	file "/var/lib/acme/conf",
-		ensure => "directory",
-		owner => "acme",
-		group => "acme";
 
-	file "/var/lib/acme/conf/responses",
-		content => template('@response');
+	sudo sub {
+		file "/var/lib/acme/conf",
+			ensure => "directory";
 
-	run "go get github.com/hlandau/acme/cmd/acmetool",
-		creates => "/home/acme/.local/go/bin/acmetool",
-		env => {
-			GOPATH => "/home/acme/.local/go",
-		},
-		user => "acme";
+		file "/var/lib/acme/conf/responses",
+			content => template('@response');
 
-	run "/home/acme/.local/go/bin/acmetool quickstart --batch",
-		creates => "/var/lib/acme/conf/target",
-		env => {
-			GOPATH => "/home/acme/.local/go",
-		},
-		user => "acme";
+		run "go get github.com/hlandau/acme/cmd/acmetool",
+			creates => "/home/acme/.local/go/bin/acmetool",
+			env => {
+				GOPATH => "/home/acme/.local/go",
+			};
+
+		run "/home/acme/.local/go/bin/acmetool quickstart --batch",
+			creates => "/var/lib/acme/conf/target",
+			env => {
+				GOPATH => "/home/acme/.local/go",
+			};
+	}, user => "acme";
 
 	service "acmetool.service", ensure => "started";
 };
