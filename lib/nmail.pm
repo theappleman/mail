@@ -2,6 +2,7 @@ package nmail;
 
 use Rex -base;
 use Rex::CMDB;
+use dotd;
 
 desc "SMTP server";
 task "postfix", make {
@@ -14,9 +15,8 @@ task "postfix", make {
 	my $virtual_users = get(cmdb("virtual_users"));
 	my $virtual_alias = get(cmdb("virtual_aliases"));
 
-	file "/etc/portage/package.use/mail-mta",
-		on_change => sub { pkg "postfix", ensure => "latest" },
-		content => "mail-mta/postfix mysql dovecot-sasl";
+	dotd::dotd { conf => "/etc/portage/package.use",
+		line => "mail-mta/postfix mysql dovecot-sasl" };
 	pkg "postfix", ensure => "present";
 	service "postfix", ensure => "started";
 
@@ -64,9 +64,8 @@ task "dovecot", make {
 	my $mailserver = get(cmdb("mailserver"));
 	my %sysinf = get_system_information;
 
-	file "/etc/portage/package.use/net-mail",
-		on_change => sub { pkg "dovecot", ensure => "latest" },
-		content => "net-mail/dovecot mysql sieve";
+	dotd::dotd { conf => "/etc/portage/package.use",
+		line => "net-mail/dovecot mysql sieve" };
 
 	pkg "dovecot", ensure => "present";
 	service "dovecot", ensure => "started";
@@ -103,14 +102,16 @@ task "opendkim", make {
 		content => "D /run/opendkim 0750 milter postfix";
 	file "/etc/portage/profile",
 		ensure => "directory";
-	append_if_no_such_line "/etc/portage/profile/package.use.mask",
-		"mail-filter/opendkim -opendbx";
-	append_if_no_such_line "/etc/portage/package.accept_keywords",
-		"dev-db/opendbx **";
-	append_if_no_such_line "/etc/portage/package.accept_keywords",
-		"mail-filter/opendkim ~arm";
-	append_if_no_such_line "/etc/portage/package.accept_keywords",
-		"mail-filter/libmilter ~arm";
+	dotd::dotd { conf => "/etc/portage/profile/package.use.mask",
+		line => "mail-filter/opendkim -opendbx" };
+
+	foreach my $line (@{["dev-db/opendbx **","mail-filter/opendkim ~arm","mail-filter/libmilter ~arm"]}) {
+		dotd::dotd {
+			conf => "/etc/portage/package.accept_keywords",
+			line => $line,
+		}
+	}
+
 	file "/etc/portage/package.use/opendkim",
 		on_change => sub { pkg "opendkim", ensure => "latest" },
 		content => template('@opendkim.use');
