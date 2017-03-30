@@ -30,7 +30,7 @@ task "install", make {
 		content => "www-servers/nginx nginx_modules_http_sub",
 		on_change => sub { notify "run", "nginx-latest" };
 
-	pkg "nginx", ensure => "present";
+	pkg "nginx[nginx_modules_http_sub]", ensure => "present";
 	service "nginx", ensure => "started";
 
 	file "/etc/nginx/nginx.conf",
