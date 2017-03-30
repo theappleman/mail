@@ -1,6 +1,7 @@
 package nginx;
 
 use Rex -base;
+use dotd;
 
 desc "Install nginx";
 task "install", make {
@@ -17,18 +18,16 @@ task "install", make {
 	if ($params->{rtmp}) {
 		file "/etc/portage/profile",
 			ensure => "directory";
-		append_if_no_such_line "/etc/portage/profile/package.use.mask",
-			"www-servers/nginx -rtmp";
-		append_if_no_such_line "/etc/portage/package.accept_keywords",
-			"www-servers/nginx:0 ~arm";
-		file "/etc/portage/package.use/www-servers",
-			content => "www-servers/nginx rtmp",
-			on_change => sub { notify "run", "nginx-latest" };
+		dotd::dotd { conf => "/etc/portage/profile/package.use.mask",
+			line => "www-servers/nginx -rtmp" };
+		dotd::dotd { conf => "/etc/portage/package.accept_keywords",
+			line => "www-servers/nginx:0 ~arm" };
+		dotd::dotd { conf => "/etc/portage/package.use",
+			line => "www-servers/nginx rtmp" };
 	}
 
-	file "/etc/portage/package.use/www-servers",
-		content => "www-servers/nginx nginx_modules_http_sub",
-		on_change => sub { notify "run", "nginx-latest" };
+	dotd::dotd { conf => "/etc/portage/package.use",
+		line => "www-servers/nginx nginx_modules_http_sub" };
 
 	pkg "nginx", ensure => "present";
 	service "nginx", ensure => "started";
