@@ -71,6 +71,12 @@ task "dovecot", make {
 	pkg "dovecot", ensure => "present";
 	service "dovecot", ensure => "started";
 
+	file "/mail",
+		ensure => "directory",
+		owner => "dovecot",
+		group => "mail",
+		mode  => "0770";
+
 	file "/etc/dovecot/sieve",
 		source => "files/sieve",
 		on_change => sub { run "sievec /etc/dovecot/sieve" };
