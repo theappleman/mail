@@ -40,7 +40,16 @@ task "install", make {
 		content => template('@service');
 	#use Data::Dumper; say Dumper $Oxdc;
 
+	# Enable linger
+	file "/var/lib/systemd/linger/_0xdc",
+		state => "present";
+
 	sudo { user => "_0xdc", command => sub {
+		foreach my $csdir (@{[".config",".config/systemd",".config/systemd/user"]}) {
+			file "/home/_0xdc/$csdir",
+				state => "directory";
+		}
+
 		checkout "0xdc",
 			path => "/home/_0xdc/0xdc-cfg";
 		file "/home/_0xdc/.0xdc.cfg",
@@ -56,7 +65,7 @@ task "install", make {
 			creates => "/home/_0xdc/0xdc-cfg/env/bin/activate";
 		run ". env/bin/activate && pip install -r requirements.txt",
 			cwd => "/home/_0xdc/0xdc-cfg";
-		run "systemctl --user restart 0xdc";
+		run "systemctl --user enable --now 0xdc";
 	  }
 	};
 };
@@ -86,4 +95,7 @@ ExecStartPre=/home/_0xdc/0xdc-cfg/env/bin/python /home/_0xdc/0xdc-cfg/manage.py 
 ExecStartPre=/home/_0xdc/0xdc-cfg/env/bin/python /home/_0xdc/0xdc-cfg/manage.py migrate
 ExecStart=/home/_0xdc/0xdc-cfg/env/bin/gunicorn syscfg.wsgi:application
 WorkingDirectory=/home/_0xdc/0xdc-cfg
+
+[Install]
+WantedBy=default.target
 @end
