@@ -27,7 +27,8 @@ task "install", make {
 
 	run "mysqladmin password $pwgen";
 	file "/root/.my.cnf",
-		content => template('@my.cnf', password => $pwgen);
+		content => template('@my.cnf', password => $pwgen),
+		if $? == 0;
 
 	run q|mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"|;
 	run q|mysql -e "DELETE FROM mysql.user WHERE User=''"|;
