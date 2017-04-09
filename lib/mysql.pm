@@ -56,6 +56,13 @@ task "mkuser", make {
 		unless => qq/mysql -e "select user from mysql.user" | grep -q $user/;
 };
 
+desc "Install and configure holland";
+task "holland", make {
+	needs main "root" || die "Cannot gain root access";
+
+	pkg "holland", ensure => "present";
+};
+
 1;
 
 __DATA__
