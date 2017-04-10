@@ -13,6 +13,7 @@ task "postfix", make {
 	my $virtual_domains = get(cmdb("virtual_domains"));
 	my $virtual_users = get(cmdb("virtual_users"));
 	my $virtual_alias = get(cmdb("virtual_aliases"));
+	my $virtual_credentials = get(cmdb("virtual_credentials"));
 
 	file "/etc/portage/package.use/mail-mta",
 		on_change => sub { pkg "postfix", ensure => "latest" },
@@ -51,6 +52,22 @@ task "postfix", make {
 			mailserver => $mailserver,
 			virtual_aliases => $virtual_alias,
 			virtual_users => $virtual_users,
+		),
+		on_change => sub { service "postfix" => "restart" };
+	file "/etc/postfix/mysql-sasl-password-maps.cf",
+		content => template("templates/mysql-virtual-mailbox-maps.cf.tpl",
+			mailuser => $mailuser,
+			mailuserpass => $mailuserpass,
+			mailserver => $mailserver,
+			virtual_credentials => $virtual_credentials,
+		),
+		on_change => sub { service "postfix" => "restart" };
+	file "/etc/postfix/mysql-sender-dependent-relayhost-maps.cf",
+		content => template("templates/mysql-virtual-mailbox-maps.cf.tpl",
+			mailuser => $mailuser,
+			mailuserpass => $mailuserpass,
+			mailserver => $mailserver,
+			virtual_credentials => $virtual_credentials,
 		),
 		on_change => sub { service "postfix" => "restart" };
 };
