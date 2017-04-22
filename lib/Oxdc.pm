@@ -5,7 +5,7 @@ use Rex::Commands::SCM;
 use Rex::CMDB;
 
 set repository => "0xdc",
-	url => 'https://github.com/theappleman/0xdc-cfg.git',
+	url => 'https://github.com/0xdc/0xdc.io.git',
 	type => "git";
 
 desc "Install 0xdc app";
