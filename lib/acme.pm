@@ -11,6 +11,8 @@ task "install", make {
 		on_change => sub { run "systemctl daemon-reload" };
 	pkg "dev-lang/go", ensure => "present";
 	pkg "dev-vcs/git", ensure => "present";
+	pkg "sudo", ensure => "present";
+
 	if (not get_uid "acme") {
 		create_user "acme",
 			create_home => TRUE,
@@ -34,27 +36,51 @@ task "install", make {
 		ensure => "directory",
 		owner => "acme",
 		group => "acme";
-	file "/var/lib/acme/conf",
-		ensure => "directory",
-		owner => "acme",
-		group => "acme";
 
-	file "/var/lib/acme/conf/responses",
-		content => template('@response');
+	sudo sub {
+		file "/var/lib/acme/conf",
+			ensure => "directory";
 
-	run "go get github.com/hlandau/acme/cmd/acmetool",
-		creates => "/home/acme/.local/go/bin/acmetool",
+		file "/var/lib/acme/conf/responses",
+			content => template('@response');
+
+		run "go get github.com/hlandau/acme/cmd/acmetool",
+			creates => "/home/acme/.local/go/bin/acmetool",
+			env => {
+				GOPATH => "/home/acme/.local/go",
+			};
+
+		run "/home/acme/.local/go/bin/acmetool quickstart --batch",
+			creates => "/var/lib/acme/conf/target",
+			env => {
+				GOPATH => "/home/acme/.local/go",
+			};
+	}, user => "acme";
+
+	service "acmetool.service", ensure => "started";
+};
+
+desc "Want some hostnames (--hosts=)";
+task "want", make {
+	needs main 'root' || die "Cannot gain root access";
+	pkg "sudo", ensure => "present";
+
+	my $params = shift;
+	my $sysinf = get_system_information;
+
+	my $hosts = $params->{hosts} || $sysinf->{hostname};
+
+	sudo sub {
+		run "/home/acme/.local/go/bin/acmetool want $hosts", sub {
+			my ($stdout, $stderr) = @_;
+			my $server = Rex::get_current_connection()->{server};
+			Rex::Logger::info("[$server] $stdout", "warn");
+			Rex::Logger::info("[$server] $stderr", "error");
+		},
 		env => {
 			GOPATH => "/home/acme/.local/go",
-		},
-		user => "acme";
-
-	run "/home/acme/.local/go/bin/acmetool quickstart --batch",
-		creates => "/var/lib/acme/conf/target",
-		env => {
-			GOPATH => "/home/acme/.local/go",
-		},
-		user => "acme";
+		};
+	}, user => "acme";
 };
 
 1;
@@ -71,6 +97,9 @@ User=acme
 Group=acme
 WorkingDirectory=/home/acme
 ExecStart=/home/acme/.local/go/bin/acmetool
+
+[Install]
+WantedBy=multi-user.target
 @end
 
 @response
