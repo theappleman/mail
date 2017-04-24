@@ -1,6 +1,6 @@
-smtpd_tls_cert_file=/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/cert
-smtpd_tls_CAfile=/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/chain
-smtpd_tls_key_file=/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/privkey
+smtpd_tls_cert_file=/var/lib/acme/live/mail.0xdc.io/cert
+smtpd_tls_CAfile=/var/lib/acme/live/mail.0xdc.io/chain
+smtpd_tls_key_file=/var/lib/acme/live/mail.0xdc.io/privkey
 smtpd_use_tls=yes
 smtpd_tls_auth_only = yes
 smtp_tls_security_level = may
@@ -44,3 +44,10 @@ non_smtpd_milters       = $smtpd_milters
 milter_default_action   = accept
 
 maximal_queue_lifetime=14d
+
+smtp_sasl_auth_enable = yes
+smtp_sender_dependent_authentication = yes
+smtp_sasl_security_options = noanonymous
+smtp_sasl_password_maps = mysql:/etc/postfix/mysql-sasl-password-maps.cf
+sender_dependent_relayhost_maps = mysql:/etc/postfix/mysql-sender-dependent-relayhost-maps.cf
+#relayhost = [smtp.mailgun.org]:587

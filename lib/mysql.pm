@@ -11,6 +11,9 @@ task "install", make {
 		cwd => "/usr",
 		creates => "/var/lib/mysql/ibdata1";
 
+	run "systemd-tmpfiles --create",
+		creates => "/var/run/mysqld";
+
 	file "/etc/mysql/zz-mybind.cnf",
 		"ensure" => "absent";
 	file "/etc/mysql/mybind.cnf",
@@ -27,7 +30,8 @@ task "install", make {
 
 	run "mysqladmin password $pwgen";
 	file "/root/.my.cnf",
-		content => template('@my.cnf', password => $pwgen);
+		content => template('@my.cnf', password => $pwgen),
+		if $? == 0;
 
 	run q|mysql -e "DELETE FROM mysql.user WHERE User='root' AND Host NOT IN ('localhost', '127.0.0.1', '::1')"|;
 	run q|mysql -e "DELETE FROM mysql.user WHERE User=''"|;
@@ -47,13 +51,21 @@ task "mkuser", make {
 	my $pass = $params->{password} || die "No password given";
 	my $glvl = $params->{grantlvl} || "ALL";
 
-	if (length($user) gt 15) {
+	if (length($user) > 15) {
 		Rex::Logger::info("Username is (potentially) too long for MySQL, continuing...","warn");
+		Rex::Logger::info("Username $user is ".length($user)." long","warn");
 	}
 
 	run qq|mysql -e "CREATE DATABASE IF NOT EXISTS $db"|;
 	run qq|mysql -e "grant $glvl on $db.* to '$user'\@'$host' identified by '$pass'"|,
 		unless => qq/mysql -e "select user from mysql.user" | grep -q $user/;
+};
+
+desc "Install and configure holland";
+task "holland", make {
+	needs main "root" || die "Cannot gain root access";
+
+	pkg "holland", ensure => "present";
 };
 
 1;

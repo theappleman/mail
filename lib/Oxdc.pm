@@ -5,7 +5,7 @@ use Rex::Commands::SCM;
 use Rex::CMDB;
 
 set repository => "0xdc",
-	url => 'https://github.com/theappleman/0xdc-cfg.git',
+	url => 'https://github.com/0xdc/0xdc.io.git',
 	type => "git";
 
 desc "Install 0xdc app";
@@ -40,7 +40,18 @@ task "install", make {
 		content => template('@service');
 	#use Data::Dumper; say Dumper $Oxdc;
 
+	# Enable linger
+	file "/var/lib/systemd/linger",
+		ensure => "directory";
+	file "/var/lib/systemd/linger/_0xdc",
+		ensure => "present";
+
 	sudo { user => "_0xdc", command => sub {
+		foreach my $csdir (@{[".config",".config/systemd",".config/systemd/user"]}) {
+			file "/home/_0xdc/$csdir",
+				ensure => "directory";
+		}
+
 		checkout "0xdc",
 			path => "/home/_0xdc/0xdc-cfg";
 		file "/home/_0xdc/.0xdc.cfg",
@@ -56,7 +67,7 @@ task "install", make {
 			creates => "/home/_0xdc/0xdc-cfg/env/bin/activate";
 		run ". env/bin/activate && pip install -r requirements.txt",
 			cwd => "/home/_0xdc/0xdc-cfg";
-		run "systemctl --user restart 0xdc";
+		run "systemctl --user enable --now 0xdc";
 	  }
 	};
 };
@@ -66,13 +77,13 @@ task "install", make {
 __DATA__
 
 @0xdc.cfg
-SECRET_KEY=<%= $Oxdc->{secret_key} %>
-DB_DEFAULT_HOST=<%= $Oxdc->{hostname} %>
-DB_DEFAULT_NAME=<%= $Oxdc->{database} %>
-DB_DEFAULT_USER=<%= $Oxdc->{username} %>
-DB_DEFAULT_PASSWORD=<%= $Oxdc->{password} %>
-DEBUG=<%= $Oxdc->{debug} %>
-ALLOWED_HOST=<%= $hostname %>
+SECRET_KEY="<%= $Oxdc->{secret_key} %>"
+DB_DEFAULT_HOST="<%= $Oxdc->{hostname} %>"
+DB_DEFAULT_NAME="<%= $Oxdc->{database} %>"
+DB_DEFAULT_USER="<%= $Oxdc->{username} %>"
+DB_DEFAULT_PASSWORD="<%= $Oxdc->{password} %>"
+DEBUG="<%= $Oxdc->{debug} %>"
+ALLOWED_HOSTS="<%= $Oxdc->{hosts} %>"
 @end
 
 @service
@@ -84,6 +95,9 @@ Type=simple
 EnvironmentFile=/home/_0xdc/.0xdc.cfg
 ExecStartPre=/home/_0xdc/0xdc-cfg/env/bin/python /home/_0xdc/0xdc-cfg/manage.py collectstatic --no-input
 ExecStartPre=/home/_0xdc/0xdc-cfg/env/bin/python /home/_0xdc/0xdc-cfg/manage.py migrate
-ExecStart=/home/_0xdc/0xdc-cfg/env/bin/gunicorn syscfg.wsgi:application
+ExecStart=/home/_0xdc/0xdc-cfg/env/bin/gunicorn app.wsgi:application
 WorkingDirectory=/home/_0xdc/0xdc-cfg
+
+[Install]
+WantedBy=default.target
 @end

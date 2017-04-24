@@ -17,23 +17,23 @@ task "install", group => "hosts", make {
 
 	run "make install",
 		cwd => "/usr/src/recap",
-		creates => "/usr/sbin/recap";
+		creates => "/usr/local/sbin/recap";
 
 	file "/etc/systemd/system/recap.service",
 		content => template('@service',
-			command => "/usr/sbin/recap -B",
+			command => "/usr/local/sbin/recap -B",
 			description => "recap"
 			),
 		on_change => sub { run "systemctl daemon-reload" };
 	file "/etc/systemd/system/recap-collect.service",
 		content => template('@service',
-			command => "/usr/sbin/recap",
+			command => "/usr/local/sbin/recap",
 			description => "save recap data",
 		),
 		on_change => sub { run "systemctl daemon-reload" };
 	file "/etc/systemd/system/recaplog.service",
 		content => template('@service',
-			command => "/usr/sbin/recaplog",
+			command => "/usr/local/sbin/recaplog",
 			description => "archive logs",
 		),
 		on_change => sub { run "systemctl daemon-reload" };
