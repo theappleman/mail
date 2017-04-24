@@ -1,6 +1,6 @@
-smtpd_tls_cert_file=/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/cert
-smtpd_tls_CAfile=/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/chain
-smtpd_tls_key_file=/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/privkey
+smtpd_tls_cert_file=/var/lib/acme/live/mail.0xdc.io/cert
+smtpd_tls_CAfile=/var/lib/acme/live/mail.0xdc.io/chain
+smtpd_tls_key_file=/var/lib/acme/live/mail.0xdc.io/privkey
 smtpd_use_tls=yes
 smtpd_tls_auth_only = yes
 smtp_tls_security_level = may

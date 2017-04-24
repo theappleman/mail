@@ -43,8 +43,8 @@ service auth-worker {
 }
 
 <% if ($ssl) { %>
-ssl_cert = <%= "<" %>/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/fullchain
-ssl_key = <%= "<" %>/var/lib/acme/live/<%= $hostname %>.<%= $domain %>/privkey
+ssl_cert = <%= "<" %>/var/lib/acme/live/mail.0xdc.io/fullchain
+ssl_key = <%= "<" %>/var/lib/acme/live/mail.0xdc.io/privkey
 ssl = required
 
 ssl_protocols = !SSLv2 !SSLv3

@@ -77,7 +77,7 @@ task "dovecot", make {
 	file "/etc/dovecot/dovecot.conf",
 		content => template("templates/dovecot.conf.tpl",
 			maildir => "mail",
-			ssl => is_file("/var/lib/acme/live".$sysinf{"hostname"}."/privkey"),
+			ssl => is_file("/var/lib/acme/live/mail.0xdc.io/privkey"),
 		),
 		on_change => sub { service "dovecot" => "restart" };
 	file "/etc/dovecot/dovecot-sql.conf.ext",
