@@ -5,7 +5,7 @@ use Rex::Commands::SCM;
 use Rex::CMDB;
 
 set repository => "0xdc",
-	url => 'https://github.com/theappleman/0xdc-cfg.git',
+	url => 'https://github.com/0xdc/0xdc.io.git',
 	type => "git";
 
 desc "Install 0xdc app";
@@ -95,7 +95,7 @@ Type=simple
 EnvironmentFile=/home/_0xdc/.0xdc.cfg
 ExecStartPre=/home/_0xdc/0xdc-cfg/env/bin/python /home/_0xdc/0xdc-cfg/manage.py collectstatic --no-input
 ExecStartPre=/home/_0xdc/0xdc-cfg/env/bin/python /home/_0xdc/0xdc-cfg/manage.py migrate
-ExecStart=/home/_0xdc/0xdc-cfg/env/bin/gunicorn syscfg.wsgi:application
+ExecStart=/home/_0xdc/0xdc-cfg/env/bin/gunicorn app.wsgi:application
 WorkingDirectory=/home/_0xdc/0xdc-cfg
 
 [Install]
