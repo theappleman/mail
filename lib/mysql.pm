@@ -48,8 +48,9 @@ task "mkuser", make {
 	my $pass = $params->{password} || die "No password given";
 	my $glvl = $params->{grantlvl} || "ALL";
 
-	if (length($user) gt 15) {
+	if (length($user) > 15) {
 		Rex::Logger::info("Username is (potentially) too long for MySQL, continuing...","warn");
+		Rex::Logger::info("Username $user is ".length($user)." long","warn");
 	}
 
 	run qq|mysql -e "CREATE DATABASE IF NOT EXISTS $db"|;
