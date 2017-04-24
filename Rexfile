@@ -84,6 +84,7 @@ require sysstat;
 require portage;
 require dotd;
 require mysql;
+require vnstat;
 
 batch "mail", "acme:install", "portage:files", "mysql:install", "nmail:user", "nmail:dovecot", "nmail:postfix", "nginx:install", "Oxdc:install", "nmail:opendkim";
-batch "monitor", "recap:install", "sysstat:install";
+batch "monitor", "recap:install", "sysstat:install", "vnstat:install";
