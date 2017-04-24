@@ -29,7 +29,7 @@ task "install", make {
 	dotd::dotd { conf => "/etc/portage/package.use",
 		line => "www-servers/nginx nginx_modules_http_sub" };
 
-	pkg "nginx", ensure => "present";
+	pkg "nginx[nginx_modules_http_sub]", ensure => "present";
 	service "nginx", ensure => "started";
 
 	file "/etc/nginx/nginx.conf",
