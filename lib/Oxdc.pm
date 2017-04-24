@@ -72,7 +72,7 @@ DB_DEFAULT_NAME="<%= $Oxdc->{database} %>"
 DB_DEFAULT_USER="<%= $Oxdc->{username} %>"
 DB_DEFAULT_PASSWORD="<%= $Oxdc->{password} %>"
 DEBUG="<%= $Oxdc->{debug} %>"
-ALLOWED_HOST="<%= $hostname %>"
+ALLOWED_HOSTS="<%= $Oxdc->{hosts} %>"
 @end
 
 @service
