@@ -84,6 +84,6 @@ Type=simple
 EnvironmentFile=/home/_0xdc/.0xdc.cfg
 ExecStartPre=/home/_0xdc/0xdc-cfg/env/bin/python /home/_0xdc/0xdc-cfg/manage.py collectstatic --no-input
 ExecStartPre=/home/_0xdc/0xdc-cfg/env/bin/python /home/_0xdc/0xdc-cfg/manage.py migrate
-ExecStart=/home/_0xdc/0xdc-cfg/env/bin/gunicorn syscfg.wsgi:application
+ExecStart=/home/_0xdc/0xdc-cfg/env/bin/gunicorn app.wsgi:application
 WorkingDirectory=/home/_0xdc/0xdc-cfg
 @end
