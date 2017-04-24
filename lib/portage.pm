@@ -23,10 +23,6 @@ task "sync", group => "hosts", make {
 
 desc "Create the portage files and directories if necessary";
 task "files", make {
-	file "/etc/portage/package.accept_keywords",
-		ensure => "present";
-	file "/etc/portage/package.use",
-		ensure => "directory";
 	file "/etc/portage/profile",
 		ensure => "directory";
 	file "/etc/portage/profile/package.use.mask",
