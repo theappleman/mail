@@ -15,5 +15,5 @@ TemporaryDirectory      /var/tmp
 UMask                   022
 UserID                  milter:milter
 
-SigningTable            dsn:mysql://<%= $mailuser %>:<%= $mailuserpass %>@127.0.0.1/<%= $mailserver %>/table=nsamail_dkimdomain?keycol=domain_name_id?datacol=id
-KeyTable                dsn:mysql://<%= $mailuser %>:<%= $mailuserpass %>@127.0.0.1/<%= $mailserver %>/table=nsamail_dkimdomain?keycol=id?datacol=domain_name_id,selector,private_key
+SigningTable            dsn:mysql://<%= $mailuser %>:<%= $mailuserpass %>@127.0.0.1/<%= $mailserver %>/table=<%= $virtual_dkim %>?keycol=domain_name_id?datacol=id
+KeyTable                dsn:mysql://<%= $mailuser %>:<%= $mailuserpass %>@127.0.0.1/<%= $mailserver %>/table=<%= $virtual_dkim %>?keycol=id?datacol=domain_name_id,selector,private_key

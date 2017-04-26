@@ -17,7 +17,7 @@ task "postfix", make {
 	my $virtual_credentials = get(cmdb("virtual_credentials"));
 
 	dotd::dotd { conf => "/etc/portage/package.use",
-		line => "mail-mta/postfix mysql dovecot-sasl" };
+		line => "mail-mta/postfix mysql dovecot-sasl sasl" };
 	pkg "postfix", ensure => "present";
 	service "postfix", ensure => "started";
 
@@ -27,6 +27,14 @@ task "postfix", make {
 		on_change => sub { service "postfix" => "restart" };
 	file "/etc/postfix/master.cf",
 		content => template("templates/master.cf.tpl",
+		),
+		on_change => sub { service "postfix" => "restart" };
+	file "/etc/postfix/mysql-relay-domains.cf",
+		content => template("templates/mysql-relay-domains.cf.tpl",
+			mailuser => $mailuser,
+			mailuserpass => $mailuserpass,
+			mailserver => $mailserver,
+			virtual_domains => $virtual_domains,
 		),
 		on_change => sub { service "postfix" => "restart" };
 	file "/etc/postfix/mysql-virtual-mailbox-domains.cf",
@@ -52,10 +60,11 @@ task "postfix", make {
 			mailserver => $mailserver,
 			virtual_aliases => $virtual_alias,
 			virtual_users => $virtual_users,
+			virtual_domains => $virtual_domains,
 		),
 		on_change => sub { service "postfix" => "restart" };
 	file "/etc/postfix/mysql-sasl-password-maps.cf",
-		content => template("templates/mysql-virtual-mailbox-maps.cf.tpl",
+		content => template("templates/mysql-sasl-password-maps.cf.tpl",
 			mailuser => $mailuser,
 			mailuserpass => $mailuserpass,
 			mailserver => $mailserver,
@@ -63,7 +72,7 @@ task "postfix", make {
 		),
 		on_change => sub { service "postfix" => "restart" };
 	file "/etc/postfix/mysql-sender-dependent-relayhost-maps.cf",
-		content => template("templates/mysql-virtual-mailbox-maps.cf.tpl",
+		content => template("templates/mysql-sender-dependent-relayhost-maps.cf.tpl",
 			mailuser => $mailuser,
 			mailuserpass => $mailuserpass,
 			mailserver => $mailserver,
@@ -118,6 +127,7 @@ task "opendkim", make {
 	my $mailuser = get(cmdb("mailuser"));
 	my $mailuserpass = get(cmdb("mailuserpass"));
 	my $mailserver = get(cmdb("mailserver"));
+	my $virtual_dkim = get(cmdb("virtual_dkim"));
 
 	file "/etc/tmpfiles.d",
 		ensure => "directory";
@@ -154,6 +164,7 @@ task "opendkim", make {
 			mailuser => $mailuser,
 			mailuserpass => $mailuserpass,
 			mailserver => $mailserver,
+			virtual_dkim => $virtual_dkim,
 			),
 			on_change => sub { service "opendkim" => "restart" };
 };
