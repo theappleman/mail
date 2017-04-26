@@ -51,3 +51,5 @@ smtp_sasl_security_options = noanonymous
 smtp_sasl_password_maps = mysql:/etc/postfix/mysql-sasl-password-maps.cf
 sender_dependent_relayhost_maps = mysql:/etc/postfix/mysql-sender-dependent-relayhost-maps.cf
 #relayhost = [smtp.mailgun.org]:587
+
+dovecot_destination_recipient_limit = 1
