@@ -118,6 +118,7 @@ task "opendkim", make {
 	my $mailuser = get(cmdb("mailuser"));
 	my $mailuserpass = get(cmdb("mailuserpass"));
 	my $mailserver = get(cmdb("mailserver"));
+	my $virtual_dkim = get(cmdb("virtual_dkim"));
 
 	file "/etc/tmpfiles.d",
 		ensure => "directory";
@@ -154,6 +155,7 @@ task "opendkim", make {
 			mailuser => $mailuser,
 			mailuserpass => $mailuserpass,
 			mailserver => $mailserver,
+			virtual_dkim => $virtual_dkim,
 			),
 			on_change => sub { service "opendkim" => "restart" };
 };
