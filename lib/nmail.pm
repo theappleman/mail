@@ -52,6 +52,7 @@ task "postfix", make {
 			mailserver => $mailserver,
 			virtual_aliases => $virtual_alias,
 			virtual_users => $virtual_users,
+			virtual_domains => $virtual_domains,
 		),
 		on_change => sub { service "postfix" => "restart" };
 	file "/etc/postfix/mysql-sasl-password-maps.cf",
