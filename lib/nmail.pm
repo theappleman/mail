@@ -29,6 +29,14 @@ task "postfix", make {
 		content => template("templates/master.cf.tpl",
 		),
 		on_change => sub { service "postfix" => "restart" };
+	file "/etc/postfix/mysql-relay-domains.cf",
+		content => template("templates/mysql-relay-domains.cf.tpl",
+			mailuser => $mailuser,
+			mailuserpass => $mailuserpass,
+			mailserver => $mailserver,
+			virtual_domains => $virtual_domains,
+		),
+		on_change => sub { service "postfix" => "restart" };
 	file "/etc/postfix/mysql-virtual-mailbox-domains.cf",
 		content => template("templates/mysql-virtual-mailbox-domains.cf.tpl",
 			mailuser => $mailuser,
