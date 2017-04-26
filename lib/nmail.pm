@@ -55,7 +55,7 @@ task "postfix", make {
 		),
 		on_change => sub { service "postfix" => "restart" };
 	file "/etc/postfix/mysql-sasl-password-maps.cf",
-		content => template("templates/mysql-virtual-mailbox-maps.cf.tpl",
+		content => template("templates/mysql-sasl-password-maps.cf.tpl",
 			mailuser => $mailuser,
 			mailuserpass => $mailuserpass,
 			mailserver => $mailserver,
@@ -63,7 +63,7 @@ task "postfix", make {
 		),
 		on_change => sub { service "postfix" => "restart" };
 	file "/etc/postfix/mysql-sender-dependent-relayhost-maps.cf",
-		content => template("templates/mysql-virtual-mailbox-maps.cf.tpl",
+		content => template("templates/mysql-sender-dependent-relayhost-maps.cf.tpl",
 			mailuser => $mailuser,
 			mailuserpass => $mailuserpass,
 			mailserver => $mailserver,
