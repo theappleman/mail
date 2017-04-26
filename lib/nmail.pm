@@ -17,7 +17,7 @@ task "postfix", make {
 	my $virtual_credentials = get(cmdb("virtual_credentials"));
 
 	dotd::dotd { conf => "/etc/portage/package.use",
-		line => "mail-mta/postfix mysql dovecot-sasl" };
+		line => "mail-mta/postfix mysql dovecot-sasl sasl" };
 	pkg "postfix", ensure => "present";
 	service "postfix", ensure => "started";
 
