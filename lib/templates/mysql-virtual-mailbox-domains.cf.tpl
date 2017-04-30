@@ -2,4 +2,4 @@ user = <%= $mailuser %>
 password = <%= $mailuserpass %>
 hosts = unix:/var/run/mysqld/mysqld.sock
 dbname = <%= $mailserver %>
-query = SELECT 1 FROM <%= $virtual_domains %> WHERE name='%s'
+query = SELECT 1 FROM <%= $virtual_domains %> WHERE name='%s' and relay=0
