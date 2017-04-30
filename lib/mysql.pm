@@ -1,6 +1,7 @@
 package mysql;
 
 use Rex -base;
+use dotd;
 
 desc "Install MySQL";
 task "install", make {
@@ -64,6 +65,12 @@ task "mkuser", make {
 desc "Install and configure holland";
 task "holland", make {
 	needs main "root" || die "Cannot gain root access";
+	foreach my $line (@{["","-lib-mysql","-backup-mysqldump","-lib-common","-backup-mysql-meta"]}) {
+		dotd::dotd {
+			conf => "/etc/portage/package.accept_keywords",
+			line => "app-backup/holland" . $line,
+		}
+	}
 
 	pkg "holland", ensure => "present";
 };
