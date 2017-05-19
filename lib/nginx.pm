@@ -3,7 +3,7 @@ package nginx;
 use Rex -base;
 use dotd;
 
-desc "Install nginx";
+desc "Install nginx (--rtmp)";
 task "install", make {
 	needs main "root" || die "Cannot gain root access";
 	my $params = shift;
