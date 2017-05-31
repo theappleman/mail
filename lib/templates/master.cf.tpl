@@ -18,6 +18,7 @@ bounce    unix  -       -       n       -       0       bounce
 defer     unix  -       -       n       -       0       bounce
 showq     unix  n       -       n       -       -       showq
 flush     unix  n       -       n       1000?   0       flush
+relay     unix  -       -       n       -       -       smtp
 
 dovecot   unix  -       n       n       -       -       pipe
   flags=ODRhu user=mail:mail argv=/usr/libexec/dovecot/dovecot-lda -f ${sender} -a ${original_recipient} -d ${user}@${nexthop}
