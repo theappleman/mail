@@ -73,6 +73,13 @@ task "holland", make {
 	}
 
 	pkg "holland", ensure => "present";
+
+	file "/etc/systemd/system/holland.service",
+		content => template('@holland.service');
+	file "/etc/systemd/system/holland.timer",
+		content => template('@holland.timer');
+
+	service "holland.timer", ensure => "started";
 };
 
 1;
@@ -87,4 +94,27 @@ bind-address = ::
 [client]
 user=root
 password=<%= $password %>
+@end
+
+@holland.service
+[Unit]
+Description=holland backups
+
+[Service]
+ExecStart=/usr/bin/holland backup -q
+
+[Install]
+WantedBy=multi-user.target
+Also=holland.timer
+@end
+
+@holland.timer
+[Unit]
+Description=Daily Holland
+
+[Timer]
+OnCalendar=daily
+
+[Install]
+WantedBy=timers.target
 @end
