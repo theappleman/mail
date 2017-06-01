@@ -15,6 +15,7 @@ task "postfix", make {
 	my $virtual_users = get(cmdb("virtual_users"));
 	my $virtual_alias = get(cmdb("virtual_aliases"));
 	my $virtual_credentials = get(cmdb("virtual_credentials"));
+	my $virtual_recipients = get(cmdb("virtual_recipients"));
 
 	dotd::dotd { conf => "/etc/portage/package.use",
 		line => "mail-mta/postfix mysql dovecot-sasl sasl" };
@@ -77,6 +78,14 @@ task "postfix", make {
 			mailuserpass => $mailuserpass,
 			mailserver => $mailserver,
 			virtual_credentials => $virtual_credentials,
+		),
+		on_change => sub { service "postfix" => "restart" };
+	file "/etc/postfix/mysql-check-recipient-access.cf",
+		content => template("templates/mysql-check-recipient-access.cf.tpl",
+			mailuser => $mailuser,
+			mailuserpass => $mailuserpass,
+			mailserver => $mailserver,
+			virtual_recipients => $virtual_recipients,
 		),
 		on_change => sub { service "postfix" => "restart" };
 };

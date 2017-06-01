@@ -23,7 +23,7 @@ smtpd_client_restrictions =
 	reject_unauth_destination
 smtpd_recipient_restrictions =
 	permit_sasl_authenticated,
-	permit_mynetworks,
+	check_recipient_access mysql:/etc/postfix/mysql-check-recipient-access.cf,
 	reject_unauth_destination
 
 mydestination = localhost
