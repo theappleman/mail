@@ -24,6 +24,7 @@ task "install", make {
 			line => "www-servers/nginx:0 ~arm" };
 		dotd::dotd { conf => "/etc/portage/package.use",
 			line => "www-servers/nginx rtmp" };
+		pkg "nginx[rtmp]", ensure => "present";
 	}
 
 	dotd::dotd { conf => "/etc/portage/package.use",
