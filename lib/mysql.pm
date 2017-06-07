@@ -101,7 +101,7 @@ password=<%= $password %>
 Description=holland backups
 
 [Service]
-ExecStart=/usr/bin/holland backup -q
+ExecStart=/usr/bin/holland -q backup
 
 [Install]
 WantedBy=multi-user.target
